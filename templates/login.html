@@ -21,7 +21,7 @@
          </div>
       </div>
       <div class="form-inner">
-         <form action="/login" class="login">
+         <form class="login">
             <div class="msg" style="color:{{ color }};">{{ msg }}</div>
             <div class="field">
                <input type="text" name="num" placeholder="Username" maxlength="10" required>
@@ -40,7 +40,7 @@
                Not a user? <a href="">Sign up</a>
             </div>
          </form>
-         <form action="/signup" class="signup">
+         <form class="signup">
             <div class="msg" style="color:{{ color }};">{{ msg }}</div>
             <div class="field">
                <input type="text" name ='username' placeholder="Name" required>
@@ -63,6 +63,7 @@
             </div>
          </form>
       </div>
+   </body>
       <style>
          @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
          *{
@@ -264,5 +265,5 @@
          });
 
       </script>
-   </body>
+
 </html>
