@@ -11,3 +11,4 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 bootstrap = Bootstrap(app)
 
 from app import userView
+from app import dashboard
