@@ -1,15 +1,17 @@
 import random
 import string
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session, url_for
 from app import app
 import pyodbc
 import smtplib
 from email.message import EmailMessage
 
+global session
+
 
 def connection():
     s = 'guideportfolios.database.windows.net'  # Your server name
-    d = 'InvServ_DEV' # Database Name
+    d = 'InvServ_DEV'  # Database Name
     u = 'guideadmin'  # Your login
     p = 'Tbg963369@'  # Your login password
     cstr = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=' + s + ';DATABASE=' + d + ';UID=' + u + ';PWD=' + p
@@ -19,7 +21,7 @@ def connection():
 
 @app.route('/')
 def login():
-    return render_template('login.html')
+    return render_template('adminTemplate/adminDashboard.html')
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -31,19 +33,32 @@ def webLogin():
         try:
             conn = connection()
             cursor = conn.cursor()
-            cursor.execute("Select * from dbo.userDetails WHERE name = '" + username + "' AND password = '" + password + "'")
+            cursor.execute(
+                "Select * from dbo.userDetails WHERE name = '" + username + "' AND password = '" + password + "' "
+                "COLLATE SQL_Latin1_General_CP1_CS_AS")
             data = cursor.fetchone()
             conn.close()
             if data:
-                print('Login Successful')
-                return render_template('userTemplate/user.html')
+                session['loggedIn'] = True
+                session['id'] = username
+                is_Admin = data[5]
+                if is_Admin == 1:
+                    return render_template('userTemplate/admin.html')
+                else:
+                    return render_template('userTemplate/user.html')
             else:
-                print('Database Error')
-                return redirect('/')
+                msg = 'Incorrect Credentials Entered!'
+                return render_template('login.html', msg=msg, color='red')
         except:
-            print('Login Failed')
-            return redirect('/')
+            msg = 'No User found!'
+            return render_template('login.html', msg=msg, color='red')
     return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session['loggedin'] = False
+    return redirect(url_for('login'))
 
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -52,21 +67,20 @@ def signUp():
         if 'number' in request.form and 'password' in request.form:
             try:
                 nam = request.form['username']
-                ema = request.form['email']
                 num = request.form['number']
+                ema = request.form['email']
                 pas = request.form['password']
                 conn = connection()
                 cursor = conn.cursor()
-                cursor.execute('''Insert into dbo.userDetails (Name,Number,Email,Password) VALUES(?,?,?,?)''', nam, ema,
-                               num, pas)
+                cursor.execute('''Insert into dbo.userDetails (Name,Number,Email,Password) VALUES(?,?,?,?)''', nam, num,
+                               ema, pas)
                 conn.commit()
                 conn.close()
-                print('User created Successfully')
-                return render_template('login.html')
+                msg = 'User created Successfully'
+                return render_template('login.html', msg=msg, color='green')
             except:
-                print('User not created')
-                msg = "Please provide different Value."
-                return render_template('login.html')
+                msg = "Please try different data."
+                return render_template('login.html', msg=msg, color='red')
 
         else:
             return render_template('login.html')
@@ -98,8 +112,6 @@ def forgotPassword():
                 temp = random.sample(all)
                 msg = EmailMessage()
                 try:
-                    conn = connection()
-                    cursor = conn.cursor()
                     cursor.execute("Update dbo.userDetails set password = '" + temp + "' where email = '" + email + "'")
                     conn.commit()
                     forgot = cursor.fetchone()
@@ -142,7 +154,6 @@ def forgotPassword():
 #     conn.close()
 #     return render_template('dashboard.html', users=users)
 #
-
 
 
 # Select [Date],
