@@ -21,7 +21,7 @@ def connection():
 
 @app.route('/')
 def login():
-    return render_template('adminTemplate/adminDashboard.html')
+    return render_template('login.html')
 
 
 @app.route('/login', methods=['POST', 'GET'])

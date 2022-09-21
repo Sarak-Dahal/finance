@@ -1,4 +1,4 @@
-from flask import render_template,redirect
+from flask import render_template, redirect
 from app import app, userView
 
 conn = userView.connection()
@@ -23,7 +23,6 @@ def userDelete(num):
     cursor.execute("Delete from dbo.userDetails where number='" + num + "'")
     conn.commit()
     database()
-    return redirect("manageUsers")
-
+    return user_management()
 
 

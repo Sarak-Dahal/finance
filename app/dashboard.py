@@ -1,6 +1,16 @@
 from flask import render_template
 from app import app, userView
 
+conn = userView.connection()
+cursor = conn.cursor()
+
+
+def database():
+   # cursor.execute("select Top 100 * from dbo.dim_manager")
+    cursor.execute("select * from dbo.dim_manager where recordstatus='open' and currentindicator =1")
+    global data
+    data = cursor.fetchall()
+
 
 @app.route('/home')
 def home():
@@ -11,6 +21,7 @@ def home():
         return render_template("login.html", msg=msg, color=color)
     else:
         return render_template('userTemplate/home.html')
+
 
 @app.route('/dataAnalytics')
 def dataAnalytics():
@@ -39,7 +50,9 @@ def createSession():
         color = 'red'
         return render_template("login.html", msg=msg, color=color)
     else:
-        return render_template('userTemplate/createSession.html')
+        database()
+        return render_template('userTemplate/createSession.html', data=data)
+
 
 @app.route('/monteCarlo')
 def monteCarlo():
@@ -73,7 +86,7 @@ def portfolioReview():
 
 @app.route('/user')
 def dashboardUser():
-    if userView.session['loggedIn'] == False:
+    if not userView.session['loggedIn']:
         msg = "You Must Login to access the Page"
         color = 'red'
         return render_template("login.html", msg=msg, color=color)
