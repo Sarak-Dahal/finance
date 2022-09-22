@@ -100,7 +100,8 @@
                   </div>
                   <div class="card-body">
                      <table class="table tableFilter table-responsive" style="width:100%">
-                        <tbody style="display:table;width:100%;">
+                        <form action="/post">
+                           <tbody style="display:table;width:100%;">
                         <tr>
                            <td>Domicle</td>
                            <td>Assets Type</td>
@@ -133,9 +134,12 @@
                            </td>
                         </tr>
                         </tbody>
+
+                        </form>
+
                      </table>
                      <div class="submit" style="display:inline-block;float:right;">
-                        <button  class="btn btn-secondary btn-sm">Apply Filter</button>
+                        <button type="submit" class="btn btn-secondary btn-sm">Apply Filter</button>
                      </div>
 
                      <br><br><br>
@@ -187,18 +191,23 @@
 <script>
 $(".checkBoxClass").click(function(){
   let chkboxes = $('.checkBoxClass');
-
   for(let i = 0; i < chkboxes.length; i++) {
+    let name = ""
+
     if (chkboxes[i].checked) {
       let parentTr = chkboxes[i].parentNode.parentNode;
 
       let name = $(parentTr)[0].children[1].innerHTML;
+
       let obj = {
         'chk': true,
         name
       }
-      console.log(obj);
-       $('#myTable').append('<tr><td>' + obj +'</td></tr>');
+      console.log(obj.name);
+      if (obj.chk == true){
+         $('#myTable').append('<tr><td>' + obj.name +'</td></tr>');
+      }
+
     }
   }
 });

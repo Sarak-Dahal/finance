@@ -92,3 +92,8 @@ def dashboardUser():
         return render_template("login.html", msg=msg, color=color)
     else:
         return render_template('userTemplate/user.html')
+
+#
+# @app.route('/createSession',methods=['GET'])
+# def filterTable():
+#

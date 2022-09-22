@@ -20,6 +20,7 @@ def connection():
 
 
 @app.route('/')
+@app.route('/signup')
 def login():
     return render_template('login.html')
 
