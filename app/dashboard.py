@@ -7,7 +7,7 @@ cursor = conn.cursor()
 
 def database():
    # cursor.execute("select Top 100 * from dbo.dim_manager")
-    cursor.execute("select * from dbo.dim_manager where recordstatus='open' and currentindicator =1")
+    cursor.execute("select top(100) * from dbo.dim_manager where recordstatus='open' and currentindicator =1")
     global data
     data = cursor.fetchall()
 

@@ -111,7 +111,7 @@
                         <tr>
                            <td><SELECT class="form-select" aria-label="Default select example">
                            {% for data in data %}
-                           <OPTION value={{data[14]}}>{{data[14]}}</OPTION>
+                           <OPTION value={{data[14]}} selected>{{data[14]}}</OPTION>
                            {% endfor %}
                         </SELECT></td>
                            <td><SELECT class="form-select" name="assetsType" style="font-family:verdana">
@@ -129,25 +129,31 @@
                            {% for data in data %}
                            <OPTION value={{data[7]}}>{{data[7]}}</OPTION>
                            {% endfor %}
-                        </SELECT></td>
+                        </SELECT>
+                           </td>
                         </tr>
                         </tbody>
                      </table>
-                     <br>
+                     <div class="submit" style="display:inline-block;float:right;">
+                        <button  class="btn btn-secondary btn-sm">Apply Filter</button>
+                     </div>
+
+                     <br><br><br>
                      <div class="table-responsive">
                         <div class="table-responsive">
                            <table id="datatable" class="table mainTable table-bordered" style="width:100%">
                               <thead>
                                  <tr>
+                                    <td>Select</td>
                                     <td>Assets Type</td>
+
                                  </tr>
                               </thead>
                               <tbody>
                                  {% for data in data %}
                                  <tr>
-                                    <td width="12rem">
-                                       <input class="querySelector" type="checkbox" onchange="GetSelected()" id="activeSession" value="{{ data[3] }}">
-                                    {{ data[3] }}</td>
+                                    <td width="12rem"><input name="record" type="checkbox" class="checkBoxClass" id="activeSession"></td>
+                                    <td id="name" value="{{ data[3] }}">{{ data[3] }}</td>
                                  </tr>
                                  {% endfor %}
                               </tbody>
@@ -162,15 +168,8 @@
                   <h4 class="card-title" style="margin:1rem;">Selected Assets</h4>
                   <div class="card-body">
                      <table class="table table-bordered" style="width:100%">
-                        <thead>
-                           <tr>
-                              <td>Selections</td>
-                              <td><i class="tim-icons icon-trash-simple"> Action</i></td>
-                           </tr>
-                        </thead>
                         <tbody id="myTable">
-                           <td></td>
-                           <td></td>
+
                         </tbody>
                      </table>
                   </div>
@@ -184,26 +183,37 @@
   <link rel="stylesheet" type="text/css" href="static/css/datatable.css"/>
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
-   function GetSelected() {
-            var value = document.getElementById("activeSession").value;
-            var table = document.getElementById( 'myTable' ),
-                  row = table.insertRow(0),
-                  cell1 = row.insertCell(0),
-                  cell2 = row.insertCell(1);
 
-              cell1.innerHTML = value;
-              cell2.innerHTML = 'Delete';
-       }
+<script>
+$(".checkBoxClass").click(function(){
+  let chkboxes = $('.checkBoxClass');
+
+  for(let i = 0; i < chkboxes.length; i++) {
+    if (chkboxes[i].checked) {
+      let parentTr = chkboxes[i].parentNode.parentNode;
+
+      let name = $(parentTr)[0].children[1].innerHTML;
+      let obj = {
+        'chk': true,
+        name
+      }
+      console.log(obj);
+       $('#myTable').append('<tr><td>' + obj +'</td></tr>');
+    }
+  }
+});
 
 </script>
+
 <script>var usedNames = {};
 $("select > option").each(function () {
   if(usedNames[this.text]) {
      $(this).remove();
  } else {
      usedNames[this.text] = this.value;
- }});</script>
+ }});
+</script>
+
 <script>$(document).ready(function () {
     $.noConflict();
     var table = $('#datatable').DataTable();
