@@ -63,15 +63,18 @@ def createSession():
 
 @app.route('/createSession', methods=['GET', 'POST'])
 def filterTable():
+    database()
+
     domicle = request.form.get('domicle')
     assetsType = request.form.get('assetsType')
     geoFocus = request.form.get('geoFocus')
     lipperGlobal = request.form.get('lipperGlobal')
 
-    # cursor.execute("select * from dbo.dim_manager where Domicile='" + domicle + "' and AssetType='" + assetsType + "' "
-    #                                                                                                                "and GeographyFocus='" + geoFocus + "' and LipperGlobalClassification='" + lipperGlobal + "'")
-    database()
-    cursor.execute("select * from dbo.dim_manager where Domicile='UK' and AssetType='Equity' and GeographyFocus='United Kingdom' and LipperGlobalClassification='Equity UK'")
+    print(domicle)
+    print(assetsType)
+    print(geoFocus)
+    print(lipperGlobal)
+    cursor.execute("select * from dbo.dim_manager where Domicile='"+domicle+"' and AssetType='"+assetsType+"' and GeographyFocus='"+geoFocus+"' and LipperGlobalClassification='"+lipperGlobal+"'")
     dataTable = cursor.fetchall()
 
     return render_template('userTemplate/createSession.html', data=data, dataTable=dataTable)

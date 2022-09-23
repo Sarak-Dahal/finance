@@ -80,7 +80,7 @@
       </div>
       <!-- End Navbar -->
       <div class="content">
-         <form>
+         <form action="/createSession">
             <div class="form-group">
                <div class="input-group">
                   <label for="portfolio" style="font-size:1.2rem;margin:0.5rem;">Portfolio: </label>
@@ -98,7 +98,7 @@
                   <div class="card-header">
                      <h4 class="card-title"> Active Session: NAME HERE</h4>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body table-responsive">
                      <table class="table tableFilter table-responsive" style="width:100%">
                         <form action="/createSession", method="post">
                            <tbody style="display:table;width:100%;">
@@ -112,23 +112,23 @@
                         <tr>
                            <td><SELECT class="form-select" name="domicle" aria-label="Default select example">
                            {% for data in data %}
-                           <OPTION value={{data[14]}} selected>{{data[14]}}</OPTION>
+                           <OPTION value="{{data[14]}}" style="width: 25%;" selected>{{data[14]}}</OPTION>
                            {% endfor %}
                         </SELECT></td>
                            <td><SELECT class="form-select" name="assetsType" style="font-family:verdana">
                            {% for data in data %}
-                           <OPTION value={{data[4]}}>{{data[4]}}</OPTION>
+                           <OPTION value="{{data[4]}}" style="width: 25%;" SELECTED>{{data[4]}}</OPTION>
                            {% endfor %}
                         </SELECT></td>
-                           <td><input type="checkbox" id="isIndex" name="fav_language" value="Is Index"></td>
+                           <td><input type="checkbox" id="isIndex" name="fav_language" style="width: 15%;" value="Is Index"></td>
                            <td><SELECT class="form-select" name="geoFocus" style="font-family:verdana">
                            {% for data in data %}
-                           <OPTION value={{data[6]}}>{{data[6]}}</OPTION>
+                           <OPTION value="{{data[6]}}" SELECTED style="width: 25%;">{{data[6]}}</OPTION>
                            {% endfor %}
                         </SELECT></td>
                            <td><SELECT class="form-select" name="lipperGlobal" style="font-family:verdana">
                            {% for data in data %}
-                           <OPTION value={{data[7]}}>{{data[7]}}</OPTION>
+                           <OPTION value="{{data[7]}}" SELECTED style="width: 25%;">{{data[7]}}</OPTION>
                            {% endfor %}
                         </SELECT>
                            </td>
@@ -228,5 +228,14 @@ $("select > option").each(function () {
 	margin:  0.3rem;
 }
 
+
+tableFilter {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td select {
+  width: 100%;
+}
 </style>
 {% endblock %}
