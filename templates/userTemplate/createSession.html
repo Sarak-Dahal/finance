@@ -84,11 +84,11 @@
             <div class="form-group">
                <div class="input-group">
                   <label for="portfolio" style="font-size:1.2rem;margin:0.5rem;">Portfolio: </label>
-                  <input class="form-control" id="portfolio" type="text">
+                  <input class="form-control" id="portfolio" type="text" required>
                </div>
                <div class="input-group">
                   <label for="tickers" style="font-size:1.2rem;margin:0.5rem;">Investment List: </label>
-                  <input class="form-control" id="tickers" type="text">
+                  <input class="form-control" id="tickers" type="text" required>
                </div>
             </div>
          </form>
@@ -120,7 +120,7 @@
                            <OPTION value="{{data[4]}}" style="width: 25%;" SELECTED>{{data[4]}}</OPTION>
                            {% endfor %}
                         </SELECT></td>
-                           <td><input type="checkbox" id="isIndex" name="fav_language" style="width: 15%;" value="Is Index"></td>
+                           <td><input type="checkbox" id="isIndex" name="fav_language" value="Is Index"></td>
                            <td><SELECT class="form-select" name="geoFocus" style="font-family:verdana">
                            {% for data in data %}
                            <OPTION value="{{data[6]}}" SELECTED style="width: 25%;">{{data[6]}}</OPTION>
@@ -236,6 +236,10 @@ tableFilter {
 
 td select {
   width: 100%;
+}
+
+a{
+color:#525f7f;
 }
 </style>
 {% endblock %}
