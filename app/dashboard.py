@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 from app import app, userView
 
 conn = userView.connection()
@@ -6,10 +6,16 @@ cursor = conn.cursor()
 
 
 def database():
-   # cursor.execute("select Top 100 * from dbo.dim_manager")
-    cursor.execute("select top(100) * from dbo.dim_manager where recordstatus='open' and currentindicator =1")
     global data
+    # cursor.execute("select Top 100 * from dbo.dim_manager")
+    cursor.execute("select * from dbo.dim_manager where recordstatus='open' and currentindicator =1")
     data = cursor.fetchall()
+
+def databaseDataTable():
+    global dataTable
+    cursor.execute(
+        "select * from dbo.dim_manager where Domicile='New Zealand' and AssetType='Equity' and GeographyFocus='Global'")
+    dataTable = cursor.fetchall()
 
 
 @app.route('/home')
@@ -51,7 +57,24 @@ def createSession():
         return render_template("login.html", msg=msg, color=color)
     else:
         database()
-        return render_template('userTemplate/createSession.html', data=data)
+        databaseDataTable()
+        return render_template('userTemplate/createSession.html', data=data,dataTable=dataTable)
+
+
+@app.route('/createSession', methods=['GET', 'POST'])
+def filterTable():
+    domicle = request.form.get('domicle')
+    assetsType = request.form.get('assetsType')
+    geoFocus = request.form.get('geoFocus')
+    lipperGlobal = request.form.get('lipperGlobal')
+
+    # cursor.execute("select * from dbo.dim_manager where Domicile='" + domicle + "' and AssetType='" + assetsType + "' "
+    #                                                                                                                "and GeographyFocus='" + geoFocus + "' and LipperGlobalClassification='" + lipperGlobal + "'")
+    database()
+    cursor.execute("select * from dbo.dim_manager where Domicile='UK' and AssetType='Equity' and GeographyFocus='United Kingdom' and LipperGlobalClassification='Equity UK'")
+    dataTable = cursor.fetchall()
+
+    return render_template('userTemplate/createSession.html', data=data, dataTable=dataTable)
 
 
 @app.route('/monteCarlo')
@@ -92,8 +115,3 @@ def dashboardUser():
         return render_template("login.html", msg=msg, color=color)
     else:
         return render_template('userTemplate/user.html')
-
-#
-# @app.route('/createSession',methods=['GET'])
-# def filterTable():
-#

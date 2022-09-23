@@ -93,24 +93,24 @@
             </div>
          </form>
          <div class="row">
-            <div class="col-lg-9">
+            <div class="col-lg-8">
                <div class="card ">
                   <div class="card-header">
                      <h4 class="card-title"> Active Session: NAME HERE</h4>
                   </div>
                   <div class="card-body">
                      <table class="table tableFilter table-responsive" style="width:100%">
-                        <form action="/post">
+                        <form action="/createSession", method="post">
                            <tbody style="display:table;width:100%;">
                         <tr>
-                           <td>Domicle</td>
+                           <td>Domicile</td>
                            <td>Assets Type</td>
                            <td>Is Index</td>
                            <td>Geography Focus</td>
                            <td>Lipper Global Classified</td>
                         </tr>
                         <tr>
-                           <td><SELECT class="form-select" aria-label="Default select example">
+                           <td><SELECT class="form-select" name="domicle" aria-label="Default select example">
                            {% for data in data %}
                            <OPTION value={{data[14]}} selected>{{data[14]}}</OPTION>
                            {% endfor %}
@@ -133,16 +133,16 @@
                         </SELECT>
                            </td>
                         </tr>
+                        <tr>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td><button type="submit" class="btn btn-secondary btn-sm" style="display:inline-block;float:right;">Apply Filter</button></td>
+                        </tr>
                         </tbody>
-
                         </form>
-
                      </table>
-                     <div class="submit" style="display:inline-block;float:right;">
-                        <button type="submit" class="btn btn-secondary btn-sm">Apply Filter</button>
-                     </div>
-
-                     <br><br><br>
                      <div class="table-responsive">
                         <div class="table-responsive">
                            <table id="datatable" class="table mainTable table-bordered" style="width:100%">
@@ -150,14 +150,13 @@
                                  <tr>
                                     <td>Select</td>
                                     <td>Assets Type</td>
-
                                  </tr>
                               </thead>
                               <tbody>
-                                 {% for data in data %}
+                                 {% for dataTable in dataTable %}
                                  <tr>
                                     <td width="12rem"><input name="record" type="checkbox" class="checkBoxClass" id="activeSession"></td>
-                                    <td id="name" value="{{ data[3] }}">{{ data[3] }}</td>
+                                    <td id="name" value="{{ dataTable[3] }}">{{ dataTable[3] }}</td>
                                  </tr>
                                  {% endfor %}
                               </tbody>
@@ -167,7 +166,7 @@
                   </div>
                </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                <div class="card">
                   <h4 class="card-title" style="margin:1rem;">Selected Assets</h4>
                   <div class="card-body">
@@ -188,32 +187,22 @@
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
 
+
 <script>
-$(".checkBoxClass").click(function(){
-  let chkboxes = $('.checkBoxClass');
-  for(let i = 0; i < chkboxes.length; i++) {
-    let name = ""
-
-    if (chkboxes[i].checked) {
-      let parentTr = chkboxes[i].parentNode.parentNode;
-
-      let name = $(parentTr)[0].children[1].innerHTML;
-
-      let obj = {
-        'chk': true,
-        name
+$('input.checkBoxClass').on('change', function() {
+      var _this = $(this);
+      if(this.checked) {
+        var row = _this.closest("tr").clone();
+        row.find('td:nth-child(1), td:nth-child(3)').hide();
+        row.data('id' , this.value);
+        $('#myTable').append(row);
       }
-      console.log(obj.name);
-      if (obj.chk == true){
-         $('#myTable').append('<tr><td>' + obj.name +'</td></tr>');
+      else {
+          $('[data.id=this.id]', '#myTable').remove();
       }
-
-    }
-  }
 });
 
 </script>
-
 <script>var usedNames = {};
 $("select > option").each(function () {
   if(usedNames[this.text]) {
